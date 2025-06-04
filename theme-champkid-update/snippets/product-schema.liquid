@@ -1,0 +1,42 @@
+{% comment %}
+  Product Schema Snippet
+  - Adds structured product data for SEO
+  - Follows standard schema.org Product format
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "url": "{{ shop.url }}{{ product.url }}",
+  {% if product.featured_image %}
+    {% assign image_size = product.featured_image.width | append: 'x' | append: product.featured_image.height %}
+    "image": [
+      "{{ product.featured_image | img_url: image_size }}"
+    ],
+  {% endif %}
+  "description": "{{ product.description | strip_html | escape }}",
+  {% if product.vendor %}
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ product.vendor | escape }}"
+    },
+  {% endif %}
+  {% if product.variants %}
+    "offers": [
+      {% for variant in product.variants %}
+        {
+          "@type": "Offer",
+          "priceCurrency": "{{ shop.currency }}",
+          "price": "{{ variant.price | divided_by: 100.00 }}",
+          "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "sku": "{{ variant.sku | escape }}",
+          "name": "{{ variant.title | escape }}",
+          "url": "{{ shop.url }}{{ variant.url }}"
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  {% endif %}
+}
+</script>

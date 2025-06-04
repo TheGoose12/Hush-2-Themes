@@ -1,0 +1,68 @@
+{% comment %}
+  Simplified main-product section that maintains app block compatibility
+  while using the original theme's styling
+{% endcomment %}
+
+<section class="section deets" id="MainProduct" data-section-id="{{ section.id }}" data-section-type="product">
+  <div class="w-layout-blockcontainer container small w-container">
+    <!-- App blocks container -->
+    <div class="app-blocks-container">
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          <div class="app-block-wrapper" {{ block.shopify_attributes }}>
+            {% render block %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product information",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        }
+      ],
+      "default": "background-1",
+      "label": "Color scheme"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,97 @@
+{%- assign headerSnippetPath = "header-index" -%}
+{%- assign wfPage = "67dc7251af2ec5a78e6b0504" -%}
+{%- assign bodyClasses = "" -%}
+{%- render 'navigation' -%}
+
+<section class="section article-header">
+  <div class="w-layout-blockcontainer container w-container">
+    <div class="w-layout-vflex article-header-flex">
+      <h1 class="article-title">{{ article.title }}</h1>
+      <div class="article-meta">
+        <span class="article-date">{{ article.published_at | date: "%B %d, %Y" }}</span>
+        {% if article.author %}
+          <span class="article-author">by {{ article.author }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section article-content" style="padding-top: 0;">
+  <div class="w-layout-blockcontainer container w-container">
+    {% if article.image %}
+      <div class="article-featured-image" style="margin-top: 20px;">
+        <img src="{{ article.image | img_url: 'large' }}" alt="{{ article.title | escape }}">
+      </div>
+    {% endif %}
+    
+    <div class="article-body">
+      {{ article.content }}
+    </div>
+    
+    {% if blog.comments_enabled? %}
+      <div class="article-comments">
+        {% if article.comments_count > 0 %}
+          <h3>{{ article.comments_count }} comment(s)</h3>
+          {% paginate article.comments by 5 %}
+            {% for comment in article.comments %}
+              <div class="comment">
+                <div class="comment-author">{{ comment.author }} on {{ comment.created_at | date: "%B %d, %Y" }}</div>
+                <div class="comment-content">{{ comment.content }}</div>
+              </div>
+            {% endfor %}
+            
+            {% if paginate.pages > 1 %}
+              <div class="pagination">
+                {{ paginate | default_pagination }}
+              </div>
+            {% endif %}
+          {% endpaginate %}
+        {% endif %}
+        
+        <div class="comment-form">
+          {% form 'new_comment', article %}
+            <h3>Leave a comment</h3>
+            
+            {% if form.errors %}
+              <div class="form-errors">
+                {{ form.errors | default_errors }}
+              </div>
+            {% endif %}
+            
+            <div class="form-fields">
+              <div class="form-field">
+                <label for="CommentAuthor">Name</label>
+                <input type="text" name="comment[author]" id="CommentAuthor" placeholder="Your name" value="{{ form.author }}" autocapitalize="words" required>
+              </div>
+              
+              <div class="form-field">
+                <label for="CommentEmail">Email</label>
+                <input type="email" name="comment[email]" id="CommentEmail" placeholder="your@email.com" value="{{ form.email }}" autocorrect="off" autocapitalize="off" required>
+              </div>
+              
+              <div class="form-field">
+                <label for="CommentBody">Comment</label>
+                <textarea name="comment[body]" id="CommentBody" placeholder="Your comment" required>{{ form.body }}</textarea>
+              </div>
+              
+              <div class="form-actions">
+                <button type="submit" class="button">Post Comment</button>
+              </div>
+            </div>
+          {% endform %}
+        </div>
+      </div>
+    {% endif %}
+    
+    <div class="article-navigation">
+      <a href="{{ blog.url }}" class="button button-back">Back to {{ blog.title }}</a>
+    </div>
+  </div>
+</section>
+
+{%- render 'footer' -%}<img src="{{ 'gradient-circle.avif' | asset_url }}" loading="lazy" sizes="(max-width: 1806px) 100vw, 1806px" srcset="{{ 'gradient-circle-p-500.png' | asset_url }} 500w, {{ 'gradient-circle-p-800.png' | asset_url }} 800w, {{ 'gradient-circle-p-1080.png' | asset_url }} 1080w, {{ 'gradient-circle.avif' | asset_url }} 1806w" alt="" class="bg-blob product">
+
+<script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=67b8d999f11c52932f82d4bf" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="{{ 'webflow.js' | asset_url }}" type="text/javascript"></script>
+{{ 'udesly-shopify.min.js' | asset_url | script_tag }}

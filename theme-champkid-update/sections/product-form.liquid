@@ -1,0 +1,37 @@
+{% comment %}
+  Simplified product-form section that maintains app block compatibility
+  while using the original theme's styling
+{% endcomment %}
+
+<section class="section app-form" id="ProductForm" data-section-id="{{ section.id }}" data-section-type="product-form">
+  <div class="w-layout-blockcontainer container small w-container">
+    <!-- App blocks container styled to match your theme -->
+    <div class="app-blocks-container form-blocks">
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          <div class="app-block-wrapper" {{ block.shopify_attributes }}>
+            {% render block %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Form",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Form",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

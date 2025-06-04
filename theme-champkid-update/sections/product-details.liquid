@@ -1,0 +1,169 @@
+{% comment %}
+  Product Details Section
+  - Features and specs
+  - Links to related content
+{% endcomment %}
+
+<section class="section deets" data-section-id="{{ section.id }}" data-section-type="product-details">
+  <div class="w-layout-blockcontainer container small w-container">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        
+        {% when 'features' %}
+          <div class="rich-text-block w-richtext" {{ block.shopify_attributes }}>
+            <h2 class="heading-3 sd1">{{ block.settings.title }}</h2>
+            <ul role="list" class="sd2">
+              {% for i in (1..6) %}
+                {% assign feature_key = 'feature_' | append: i %}
+                {% if block.settings[feature_key] != blank %}
+                  <li class="list-item">{{ block.settings[feature_key] }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          
+        {% when 'links' %}
+          <div class="rich-text-block w-richtext" {{ block.shopify_attributes }}>
+            <h2 class="heading-3 sd1">{{ block.settings.title }}</h2>
+            <ul role="list" class="sd1">
+              {% for i in (1..3) %}
+                {% assign link_text_key = 'link_text_' | append: i %}
+                {% assign link_url_key = 'link_url_' | append: i %}
+                {% if block.settings[link_text_key] != blank and block.settings[link_url_key] != blank %}
+                  <li class="list-item">
+                    {{ block.settings[link_text_key] }}
+                    <a href="{{ block.settings[link_url_key] }}">link</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          
+        {% when 'custom_html' %}
+          <div class="rich-text-block w-richtext" {{ block.shopify_attributes }}>
+            {{ block.settings.custom_html }}
+          </div>
+          
+      {% endcase %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Details",
+  "blocks": [
+    {
+      "type": "features",
+      "name": "Features List",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Section Title",
+          "default": "Features"
+        },
+        {
+          "type": "text",
+          "id": "feature_1",
+          "label": "Feature 1"
+        },
+        {
+          "type": "text",
+          "id": "feature_2",
+          "label": "Feature 2"
+        },
+        {
+          "type": "text",
+          "id": "feature_3",
+          "label": "Feature 3"
+        },
+        {
+          "type": "text",
+          "id": "feature_4",
+          "label": "Feature 4"
+        },
+        {
+          "type": "text",
+          "id": "feature_5",
+          "label": "Feature 5"
+        },
+        {
+          "type": "text",
+          "id": "feature_6",
+          "label": "Feature 6"
+        }
+      ]
+    },
+    {
+      "type": "links",
+      "name": "Links List",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Section Title",
+          "default": "Learn More"
+        },
+        {
+          "type": "text",
+          "id": "link_text_1",
+          "label": "Link 1 Text"
+        },
+        {
+          "type": "url",
+          "id": "link_url_1",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text_2",
+          "label": "Link 2 Text"
+        },
+        {
+          "type": "url",
+          "id": "link_url_2",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text_3",
+          "label": "Link 3 Text"
+        },
+        {
+          "type": "url",
+          "id": "link_url_3",
+          "label": "Link 3 URL"
+        }
+      ]
+    },
+    {
+      "type": "custom_html",
+      "name": "Custom HTML",
+      "settings": [
+        {
+          "type": "html",
+          "id": "custom_html",
+          "label": "Custom HTML"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Details",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "features"
+        },
+        {
+          "type": "links"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

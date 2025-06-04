@@ -1,0 +1,132 @@
+{% comment %}
+  Product FAQ Section
+  - Expandable FAQ items
+  - Each FAQ is a separate block for easy management
+{% endcomment %}
+
+<section class="section blob faq" data-section-id="{{ section.id }}" data-section-type="product-faq">
+  <div class="w-layout-blockcontainer container small w-container">
+    <div class="w-layout-vflex flex-block-17">
+      {% if section.settings.icon != blank %}
+        <img src="{{ section.settings.icon | asset_url }}" loading="lazy" alt="" class="image-8">
+      {% else %}
+        <img src="{{ 'questions.svg' | asset_url }}" loading="lazy" alt="" class="image-8">
+      {% endif %}
+      
+      <div class="w-layout-vflex flex-block-7">
+        <div class="spacer _25"></div>
+        <h2 class="hero-h1 _2 subs pd1">{{ section.settings.heading }}</h2>
+        <h3 class="hero-h1 _2 subs brains pd1">{{ section.settings.subheading }}</h3>
+        <div class="spacer _50"></div>
+        
+        <div class="w-layout-grid faq3_component">
+          <div class="faq3_list">
+            {% for block in section.blocks %}
+              <div class="faq3_accordion {% if forloop.index <= 2 %}sd1{% else %}slide-up-1{% endif %}" {{ block.shopify_attributes }}>
+                <div data-w-id="faq-question-{{ forloop.index }}" class="faq3_question">
+                  <div class="faq-question {% if forloop.index > 2 %}text-weight-bold{% endif %}">{{ block.settings.question }}</div>
+                  <div class="faq3_icon-wrapper mgr _25">
+                    <div class="icon-embed-small {% if forloop.index > 1 %}light-brown{% endif %} w-embed">
+                      <svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.5303 20.8839C16.2374 21.1768 15.7626 21.1768 15.4697 20.8839L7.82318 13.2374C7.53029 12.9445 7.53029 12.4697 7.82318 12.1768L8.17674 11.8232C8.46963 11.5303 8.9445 11.5303 9.2374 11.8232L16 18.5858L22.7626 11.8232C23.0555 11.5303 23.5303 11.5303 23.8232 11.8232L24.1768 12.1768C24.4697 12.4697 24.4697 12.9445 24.1768 13.2374L16.5303 20.8839Z" fill="currentColor"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div style="width:100%;height:0px" class="faq3_answer">
+                  <div class="margin-bottom margin-small">
+                    <p class="mgl _25">{{ block.settings.answer }}</p>
+                    <div class="spacer _20"></div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+            
+            {% if section.blocks.size == 0 %}
+              <div class="faq3_accordion">
+                <div class="faq3_question">
+                  <div class="faq-question">Sample Question?</div>
+                  <div class="faq3_icon-wrapper mgr _25">
+                    <div class="icon-embed-small w-embed">
+                      <svg width="100%" height="100%" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.5303 20.8839C16.2374 21.1768 15.7626 21.1768 15.4697 20.8839L7.82318 13.2374C7.53029 12.9445 7.53029 12.4697 7.82318 12.1768L8.17674 11.8232C8.46963 11.5303 8.9445 11.5303 9.2374 11.8232L16 18.5858L22.7626 11.8232C23.0555 11.5303 23.5303 11.5303 23.8232 11.8232L24.1768 12.1768C24.4697 12.4697 24.4697 12.9445 24.1768 13.2374L16.5303 20.8839Z" fill="currentColor"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div style="width:100%;height:0px" class="faq3_answer">
+                  <div class="margin-bottom margin-small">
+                    <p class="mgl _25">Sample answer to the question.</p>
+                    <div class="spacer _20"></div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product FAQ",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "FAQ Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your question?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Provide a detailed answer to the question here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQ",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "faq"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "faq"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

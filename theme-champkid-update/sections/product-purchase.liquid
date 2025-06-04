@@ -1,0 +1,264 @@
+{% comment %}
+  Product Purchase Section
+  - Product image
+  - Price display
+  - Add to cart form
+  - Variant selector
+{% endcomment %}
+
+<section class="section product" id="product-{{ product.id }}" data-section-id="{{ section.id }}" data-section-type="product" data-product-id="{{ product.id }}" data-section-tag="main-product" data-product-form>
+  <div class="w-layout-blockcontainer container small w-container">
+    <div class="w-layout-vflex flex-block-16">
+      {% if section.settings.use_product_image %}
+        <img src="{{ product.featured_image | img_url: '800x' }}" 
+             loading="lazy" 
+             sizes="(max-width: 564px) 100vw, 564px" 
+             srcset="{{ product.featured_image | img_url: '500x' }} 500w, 
+                     {{ product.featured_image | img_url: '800x' }} 800w" 
+             alt="{{ product.title }}" 
+             class="image-7 sd1">
+      {% else %}
+        <img src="{{ section.settings.custom_image | img_url: '800x' }}" 
+             loading="lazy" 
+             sizes="(max-width: 564px) 100vw, 564px" 
+             srcset="{{ section.settings.custom_image | img_url: '500x' }} 500w, 
+                     {{ section.settings.custom_image | img_url: '800x' }} 800w" 
+             alt="{{ section.settings.custom_image_alt | default: product.title }}" 
+             class="image-7 sd1">
+      {% endif %}
+      
+      <div class="spacer _25">
+        <p class="paragraph-4 sd1">{{ section.settings.product_description }}</p>
+      </div>
+      
+      <div class="w-layout-hflex flex-block-15">
+        <p class="price sd1">{{ product.price | money }}</p>
+        {% if product.compare_at_price > product.price %}
+          <p class="price og sd2">{{ product.compare_at_price | money }}</p>
+        {% endif %}
+      </div>
+      
+      <img src="{{ section.settings.accent_image | default: 'squibble-vector.svg' | asset_url }}" loading="lazy" alt="" class="image-14">
+      
+      <div class="spacer _25"></div>
+      
+      <!-- Standard location for app blocks -->
+      <div class="product-form__app-blocks product__blocks" data-product-blocks style="min-height: 30px; margin: 15px 0; padding: 10px; border: 1px dashed #ddd;">
+        {% comment %}App blocks will appear here{% endcomment %}
+        {%- for block in section.blocks -%}
+          {%- if block.type == '@app' -%}
+              <div class="app-block-product-meta" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      
+      <div class="add-to-cart">
+        {% form "product", product, data-product-form: "", class: "w-commerce-commerceaddtocartform" %}
+          
+          {% unless product.has_only_default_variant %}
+            <div data-node-type="add-to-cart-option-list">
+              {% for option in product.options_with_values %}
+                <fieldset data-node-type="add-to-cart-option">
+                  <label data-node-type="add-to-cart-option-label">{{ option.name }}</label>
+                  <select data-node-type="add-to-cart-option-select" 
+                          class="select-field w-select" 
+                          style="display: none;" 
+                          name="{{ "option" | append: forloop.index }}">
+                    {% render "product-options", option: option %}
+                  </select>
+                  <div data-node-type="add-to-cart-option-pill-group" 
+                       class="w-commerce-commerceaddtocartoptionpillgroup" 
+                       aria-label="{{ "option" | append: forloop.index  }}">
+                    {% for value in option.values %}
+                      <div data-node-type="add-to-cart-option-pill" 
+                           class="w-commerce-commerceaddtocartoptionpill" 
+                           data-option-name="{{ value | handle }}">
+                        <div data-node-type="block">{{ value }}</div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+              {% endfor %}
+            </div>
+          {% endunless %}
+          
+          <!-- Standard location for variant-specific app blocks -->
+          <div data-product-variant-blocks style="min-height: 30px; margin: 15px 0; padding: 10px; border: 1px dashed #ddd;">
+            {% comment %}Variant-specific app blocks will appear here{% endcomment %}
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}
+                <div class="app-block-variant-picker" {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          
+          {% if section.settings.show_quantity %}
+          <label for="quantity" class="quantity-label">{{ section.settings.quantity_label }}</label>
+          <input type="number" 
+                 pattern="^[0-9]+$" 
+                 inputmode="numeric" 
+                 id="quantity" 
+                 name="quantity" 
+                 min="1" 
+                 class="w-commerce-commerceaddtocartquantityinput quantity" 
+                 value="1">
+          {% else %}
+          <input type="hidden" name="quantity" value="1">
+          {% endif %}
+          
+          <input type="submit" 
+                 data-node-type="commerce-add-to-cart-button" 
+                 data-loading-text="{{ section.settings.add_to_cart_loading }}" 
+                 aria-busy="false" 
+                 aria-haspopup="dialog" 
+                 class="w-commerce-commerceaddtocartbutton button product sd1" 
+                 value="{{ section.settings.add_to_cart_text }}">
+          
+          {% if section.settings.enable_buy_now %}
+            <a data-node-type="commerce-buy-now-button" 
+               data-default-text="{{ section.settings.buy_now_text }}" 
+               data-subscription-text="Subscribe now" 
+               aria-busy="false" 
+               aria-haspopup="false" 
+               class="w-commerce-commercebuynowbutton button product sd1" 
+               href="/checkout">{{ section.settings.buy_now_text }}</a>
+          {% endif %}
+          
+          {% render "product-variants-data", product: product %}
+        {% endform %}
+        
+        <div style="display:none" class="w-commerce-commerceaddtocartoutofstock" tabindex="0">
+          <div>{{ section.settings.out_of_stock_text }}</div>
+        </div>
+        
+        <div aria-live="assertive" 
+             data-node-type="commerce-add-to-cart-error" 
+             style="display:none" 
+             class="w-commerce-commerceaddtocarterror">
+          <div data-node-type="commerce-add-to-cart-error" 
+               data-w-add-to-cart-quantity-error="Product is not available in this quantity." 
+               data-w-add-to-cart-general-error="Something went wrong when adding this item to the cart." 
+               data-w-add-to-cart-mixed-cart-error="You can't purchase another product with a subscription." 
+               data-w-add-to-cart-buy-now-error="Something went wrong when trying to purchase this item." 
+               data-w-add-to-cart-checkout-disabled-error="Checkout is disabled on this site." 
+               data-w-add-to-cart-select-all-options-error="Please select an option in each set.">
+            {{ section.settings.error_text }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Debug information - only visible in theme editor -->
+      {% if request.design_mode %}
+      <div style="background: #f5f5f5; padding: 10px; margin: 10px 0; font-size: 12px;">
+        <p>App blocks in this section: {{ section.blocks | where: "type", "@app" | size }}</p>
+        {% for block in section.blocks %}
+          {% if block.type == '@app' %}
+            <p>Block ID: {{ block.id }} - Type: {{ block.type }}</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      
+      <div class="product-bg"></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Purchase",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "use_product_image",
+      "label": "Use Product Featured Image",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image",
+      "label": "Custom Product Image",
+      "info": "Only used if 'Use Product Featured Image' is unchecked"
+    },
+    {
+      "type": "text",
+      "id": "custom_image_alt",
+      "label": "Custom Image Alt Text"
+    },
+    {
+      "type": "textarea",
+      "id": "product_description",
+      "label": "Product Description",
+      "default": "This is a high-quality product designed to meet your needs."
+    },
+    {
+      "type": "image_picker",
+      "id": "accent_image",
+      "label": "Accent Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Show Quantity Selector",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Quantity Label",
+      "default": "Quantity"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to Cart Text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_loading",
+      "label": "Add to Cart Loading Text",
+      "default": "Adding..."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_buy_now",
+      "label": "Enable Buy Now Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "buy_now_text",
+      "label": "Buy Now Text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "text",
+      "id": "out_of_stock_text",
+      "label": "Out of Stock Text",
+      "default": "This product is out of stock."
+    },
+    {
+      "type": "text",
+      "id": "error_text",
+      "label": "Error Text",
+      "default": "Something went wrong. Please try again."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Purchase",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

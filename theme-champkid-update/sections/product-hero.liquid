@@ -1,0 +1,108 @@
+{% comment %}
+  Product Hero Section
+  - Main product title, subtitle, and introductory text
+  - Video embed support
+{% endcomment %}
+
+<section class="section product-hero" data-section-id="{{ section.id }}" data-section-type="product-hero">
+  <div class="w-layout-blockcontainer container-6 w-container">
+    <div class="w-layout-hflex flex-block-14">
+      <div class="w-layout-vflex flex-block-13">
+        <img src="{{ section.settings.hero_icon | default: 'smiley.svg' | asset_url }}" loading="lazy" alt="{{ section.settings.hero_icon_alt }}" class="image-5">
+        <h1 class="hero-h1 product">{{ section.settings.title | default: product.title }}</h1>
+        <h1 class="hero-h1 product second">{{ section.settings.subtitle }}</h1>
+      </div>
+      <div class="div-block">
+        <p class="free-shipping">
+          {{ section.settings.promotion_text_1 }}
+          <br>
+          {{ section.settings.promotion_text_2 }}
+        </p>
+        <img src="{{ section.settings.accent_image | default: 'circle-vector.svg' | asset_url }}" loading="lazy" alt="" class="image-6">
+      </div>
+    </div>
+    
+    <div class="spacer _50"></div>
+    
+    {% if section.settings.video_url != blank %}
+      <div style="padding-top:56.17021276595745%" class="video w-video w-embed">
+        <iframe 
+          class="embedly-embed" 
+          src="{{ section.settings.video_url | replace: 'watch?v=', 'embed/' }}" 
+          width="940" 
+          height="528" 
+          scrolling="no" 
+          allowfullscreen="" 
+          title="{{ section.settings.video_title }}">
+        </iframe>
+      </div>
+      <div class="spacer _25"></div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Product Title",
+      "default": "Product Title"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Product Subtitle",
+      "default": "Product Subtitle"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_icon",
+      "label": "Hero Icon"
+    },
+    {
+      "type": "text",
+      "id": "hero_icon_alt",
+      "label": "Hero Icon Alt Text",
+      "default": "Product icon"
+    },
+    {
+      "type": "text",
+      "id": "promotion_text_1",
+      "label": "Promotion Text Line 1",
+      "default": "Free shipping worldwide"
+    },
+    {
+      "type": "text",
+      "id": "promotion_text_2",
+      "label": "Promotion Text Line 2",
+      "default": "Money-back guarantee"
+    },
+    {
+      "type": "image_picker",
+      "id": "accent_image",
+      "label": "Accent Image"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (YouTube)",
+      "info": "YouTube URL for product demonstration"
+    },
+    {
+      "type": "text",
+      "id": "video_title",
+      "label": "Video Title",
+      "default": "Product Demo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Hero",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

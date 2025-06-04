@@ -1,0 +1,27 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Your Theme Name",
+    "theme_version": "1.0.0",
+    "theme_author": "Your Name",
+    "theme_documentation_url": "https://example.com",
+    "theme_support_url": "https://example.com/support"
+  },
+  {
+    "name": "App Block Support",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This theme supports app blocks for product templates."
+      },
+      {
+        "type": "header",
+        "content": "Supported Templates"
+      },
+      {
+        "type": "paragraph",
+        "content": "Product"
+      }
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+<!-- Standard location for app blocks -->
+<div class="product-form__app-blocks product__blocks" data-product-blocks style="min-height: 30px; margin: 15px 0; padding: 10px; border: 1px dashed #ddd;">
+  {% comment %}App blocks will appear here{% endcomment %}
+  {%- for block in section.blocks -%}
+    {%- if block.type == '@app' -%}
+      <div class="app-block-product-meta" {{ block.shopify_attributes }}>
+        {% render block %}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>

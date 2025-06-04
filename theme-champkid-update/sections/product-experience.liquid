@@ -1,0 +1,106 @@
+{% comment %}
+  Product Experience Section
+  - Additional product information and marketing content
+  - Configurable headline, image, and description
+{% endcomment %}
+
+<section class="section experience" data-section-id="{{ section.id }}" data-section-type="product-experience">
+  <div class="w-layout-blockcontainer container small w-container">
+    <div class="w-layout-vflex flex-block-6 pd1">
+      <h3 class="h2 center sd1">{{ section.settings.heading }}</h3>
+      <div class="spacer _10"></div>
+      
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | img_url: '800x' }}" 
+             loading="lazy" 
+             alt="{{ section.settings.image_alt | default: section.settings.heading }}" 
+             class="product-col-img sd1">
+      {% endif %}
+      
+      <p class="sd1">{{ section.settings.description }}</p>
+      
+      {% if section.settings.button_text != blank and section.settings.button_url != blank %}
+        <div class="spacer _20"></div>
+        <a href="{{ section.settings.button_url }}" class="button sd1">{{ section.settings.button_text }}</a>
+      {% endif %}
+      
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when '@app' %}
+            <div class="app-block-experience" {{ block.shopify_attributes }}>
+              {% render block %}
+            </div>
+            
+          {% when 'custom_html' %}
+            <div class="custom-html-block" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_html }}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Experience",
+  "tag": "section",
+  "class": "product-experience-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Experience the Difference"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image Alt Text"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover why our customers love this product. Made with high-quality materials and expert craftsmanship."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "custom_html",
+      "name": "Custom HTML",
+      "settings": [
+        {
+          "type": "html",
+          "id": "custom_html",
+          "label": "Custom HTML"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Experience",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

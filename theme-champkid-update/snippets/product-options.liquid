@@ -1,0 +1,11 @@
+{% comment %}
+  Product Options Snippet
+  - Used for rendering variant option dropdown values
+  - Supports single and multiple option products
+{% endcomment %}
+
+{% for value in option.values %}
+  <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>
+    {{ value }}
+  </option>
+{% endfor %}
