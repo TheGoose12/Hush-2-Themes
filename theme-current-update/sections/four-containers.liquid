@@ -1,0 +1,135 @@
+<!-- Begin custom Liquid section -->
+{% stylesheet %}
+ 
+  
+  .icon-row {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap as needed */
+    justify-content: space-around;
+    align-items: flex-start; /* Align items at the top */
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .icon-container {
+    flex: 1 0 20%; /* On desktop, each container will take up roughly 20% of the flex container width */
+    max-width: 20%; /* Prevents any container from getting larger than 20% of .icon-row width */
+    padding: 10px; /* Provides some space around the items */
+    box-sizing: border-box; /* Padding is included in the width */
+    display: flex; /* Enables flexbox for vertical centering of the image */
+    flex-direction: column; /* Stacks the image and text vertically */
+    align-items: center; /* Centers the items horizontally */
+  }
+
+  .icon-container img {
+    max-width: 90%; /* Ensures image is fully contained within its container */
+    max-height: 150px; /* Sets a maximum height for all images */
+    margin-bottom: 10px; /* Space between icon and text */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .icon-text {
+    flex-grow: 1; /* Takes up all available space in the container */
+    display: flex;
+    align-items: center; /* Centers the text vertically */
+    justify-content: center; /* Centers the text horizontally */
+    height: 100%; /* Full height to push the text to the bottom */
+  }
+
+{
+  padding-top: 30px;
+}
+.section-button {
+  text-align: center;
+  margin-top: 20px;
+}
+.button {
+  display: inline-block;
+  padding: 14px 40px;
+  background-color: #F5514A;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background-color: #ff2219;
+}
+.button:after {
+  box-shadow: none !important;
+}
+
+  @media (max-width: 749px) {
+    .icon-container {
+      flex: 1 0 46%; /* On mobile, each container will take up roughly 46% of the flex container width */
+      max-width: 46%; /* Adjust this value if you want smaller or larger images on mobile */
+      margin-bottom: 20px; /* Provide space between the rows of images on mobile */
+    }
+  }
+
+
+  
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "Four Containers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Click here"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "icon-text",
+      "name": "Icon and Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Your text here"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="section-custom-four section-{{ section.id }}-padding gradient color-{{ section.settings.section_color_scheme }}">
+  <div class="page-width">
+<div class="icon-row">
+  {% for block in section.blocks %}
+    <div class="icon-container">
+      {% if block.settings.icon_image != blank %}
+        <img src="{{ block.settings.icon_image | img_url: 'original' }}" alt="" class="icon-image">
+      {% endif %}
+      <p>{{ block.settings.text }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% if section.settings.button_text != blank and section.settings.button_link != blank %}
+  <div class="section-button">
+    <a href="{{ section.settings.button_link }}" class="button">
+      {{ section.settings.button_text }}
+    </a>
+  </div>
+</div>
+</div>
+{% endif %}

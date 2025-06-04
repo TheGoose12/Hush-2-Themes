@@ -1,0 +1,219 @@
+{% schema %}
+{
+  "name": "Hush Fullwidth Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Your Title Here"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title Font Size",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Your Subtitle Here"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "label": "Subtitle Font Size",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+{
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#000000"
+    },
+{
+  "type": "select",
+  "id": "text_align",
+  "label": "Text Align",
+  "options": [
+    {
+      "value": "center",
+      "label": "Center"
+    },
+    {
+      "value": "left",
+      "label": "Left"
+    }
+  ],
+  "default": "center"
+},
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_fixed",
+      "label": "Fixed Background",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "background_size",
+      "label": "Background Size",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "top_padding",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "bottom_padding",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+{
+  "type": "range",
+  "id": "background_position_offset",
+  "label": "Background Position Offset",
+  "min": -100,
+  "max": 100,
+  "step": 2, 
+  "default": 0,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "id": "section_min_height",
+  "label": "Section Min-Height (vh)",
+  "min": 10,
+  "max": 100,
+  "step": 5,
+  "default": 50,
+  "unit": "vh"
+}
+  ],
+  "presets": [
+    {
+      "name": "Hush Fullwidth Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+
+{% stylesheet %}
+
+@font-face {
+    font-family: "Tagliner";
+    src: url("{{ 'TAGLINER' | file_url }}") format("OTF");
+}
+
+.custom-section {
+  position: relative;
+  min-height: {{ section.settings.section_min_height }}vh;
+  overflow: hidden;
+}
+
+.custom-section-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: {{ section.settings.section_min_height }}vh;
+  width:100%;
+  z-index: 1 !important;
+}
+
+.content {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  z-index: 2 !important;
+}
+
+.content-{{section.id}} .hush_full_title{
+  margin-bottom:-30px;
+  }
+
+.content-{{section.id}} h3{
+  font-family:"Tagliner" !important;
+  font-weight:Light !important;
+  }
+
+
+{% endstylesheet %}
+
+{% if section.settings.text_align == 'left' %}
+    {% assign text_align_padding = '40px' %}
+  {% else %}
+    {% assign text_align_padding = '0px' %}
+  {% endif %}
+
+
+{% if section.settings.background_fixed %}
+    {% assign background_attachment = 'fixed' %}
+  {% else %}
+    {% assign background_attachment = 'scroll' %}
+  {% endif %}
+
+<div class="custom-section" style="text-align: {{ section.settings.text_align }}; background-image: url('{{ section.settings.background_image | img_url: '2000x' }}'); background-attachment: {{ background_attachment }}; background-size: {{ section.settings.background_size }}; padding-top: {{ section.settings.top_padding }}px; padding-bottom: {{ section.settings.bottom_padding }}px; background-position: center {{ section.settings.background_position_offset }}px; background-repeat: no-repeat; min-height: {{ section.settings.section_min_height }}vh;">
+  <div class="custom-section-overlay" style="opacity: .{{ section.settings.overlay_opacity}}; background-color: {{ section.settings.overlay_color }}; "> </div>
+  <div class="content content-{{section.id}}" style="padding-left:{{ text_align_padding }};">
+
+    <h3 class="hush_full_title" style="color:{{section.settings.main_color}}; font-size: {{ section.settings.title_font_size }}px;">{{ section.settings.title }}</h3>
+
+    <h3 class="hush_full_subtitle" style="color:{{section.settings.main_color}}; font-size: {{ section.settings.subtitle_font_size }}px;">{{ section.settings.subtitle }} </h3>
+
+  </div>
+</div>
