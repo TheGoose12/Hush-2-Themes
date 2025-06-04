@@ -1,0 +1,172 @@
+{% layout 'theme' %}
+
+<style>
+/* Dawn theme styles */
+  
+.blog-archive {
+  max-width: 1140px; /* Set max width */
+  margin: 0 auto; /* Center the content */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+  gap: 30px;
+  padding:0px 20px 30px;
+}
+
+ 
+.blog-archive-month {
+  grid-column: 1 / -1; /* Span across all columns */
+  margin-bottom: 10px;
+}
+
+
+
+.blog-post {
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden; /* Ensures the image doesn't overflow */
+  transition: transform 0.3s; /* Smooth transition for scaling */
+  display: flex; /* Use flexbox to align items */
+  flex-direction: column; /* Arrange items vertically */
+}
+
+.blog-post:hover {
+  transform: scale(1.05); /* Scale up on hover */
+}
+
+.blog-post-link {
+  display: block; /* Make the whole card a link */
+}
+
+.blog-post-inner {
+  padding: 15px; /* Add padding */
+  flex: 1; /* Allow the image to take up remaining space */
+}
+
+a.blog-link-card {
+  font-size: 20px;
+  color: #333;
+  text-decoration: none;
+  padding-left: 10px; /* Add padding on left */
+}
+
+.blog-post-title a:hover {
+  color: #ff6600;
+}
+
+.blog-post-image img {
+  width: 100%; /* Image takes 100% width of its container */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensure the image covers the entire container */
+  border-radius: 10px; /* Rounded corners only at the top */
+  margin-top: auto; /* Push the image to the bottom */
+}
+
+.blog-post-excerpt {
+  font-size: 16px;
+  color: #555;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .blog-archive {
+    grid-template-columns: 1fr; /* 1 card per row for mobile */
+  }
+  
+  .blog-post {
+position:relative;
+    flex-direction: row; /* Change direction to row */
+    align-items: center; /* Align items in the center */
+    padding: 0px; /* Reduce padding */
+  }
+  
+  .blog-post-inner {
+    padding: 0px; /* Add padding on left and right */
+    flex: 1; /* Allow the text to take up remaining space */
+  }
+  
+  .blog-post-image {
+    flex: none; /* Disable flex for the image */
+    width: 150px; /* Set width of the image */
+    height:150px;
+    margin-right: 0px; /* Add spacing between image and text */
+  }
+  
+  .blog-post-image img {
+    width: 100%; /* Image takes 100% width */
+    border-radius: 5px; /* Rounded corners for thumbnail */
+  }
+  
+
+
+.blog-post-title{
+    font-size: 22px;
+  
+    color: #333;
+    text-decoration: none;
+    top:0px;
+    left:10px;
+    display:block; 
+    margin-left: 155px; /* Add spacing between image and title */
+    margin-top:10px;
+    padding-right:8px;
+    position:absolute;
+  }
+  
+
+
+  .blog-post-title a:hover {
+    color: #ff6600;
+  }
+}
+.maintitle-wrap{
+  display:block;
+  max-width: 1140px; /* Set max width */
+  margin: 0 auto 20px auto; /* Center the content */
+display: grid;
+  padding:10px 20px 0px;
+}
+.monthly-maintitle{
+  
+  margin-bottom:10px;
+  font-weight:bold;
+}
+
+.monthly-subtitle{
+max-width: 760px;
+}
+
+</style>
+
+{% paginate blog.articles by 10 %}
+
+<div class="maintitle-wrap">
+  <h1 class="monthly-maintitle">Monthly Content Drop</h1>     
+  <span class="monthly-subtitle">We want the Hush Hush Coffee Club to be AMAZING, so each month in addition to the coffee we release a drop of content that pairs with the coffee we ship and the events Nomadic Cafe. </span>
+</div>
+
+<div class="blog-archive">
+ 
+  {% assign current_month = '' %}
+  {% for article in blog.articles %}
+    {% capture article_month %}{{ article.published_at | date: "%B %Y" }}{% endcapture %}
+    {% if current_month != article_month %}
+      {% assign current_month = article_month %}
+        
+        <h2 class="blog-archive-month">{{ current_month }}</h2>
+    {% endif %}
+<a href="{{ article.url }}" class="blog-link-card">   
+ <div class="blog-post">
+      <div class="blog-post-inner">
+        <h3 class="blog-post-title">{{ article.title }}</h3>
+        <!-- <p class="blog-post-date">{{ article.published_at | date: "%B %d, %Y" }}</p> -->
+        <div class="blog-post-image">
+          <img src="{{ article.image.src | img_url: 'large' }}" alt="{{ article.title }}" />
+        </div>
+        <p class="blog-post-excerpt">{{ article.excerpt }}</p>
+      </div>
+    </div>
+</a>
+  {% endfor %}
+</div>
+{% endpaginate %}
